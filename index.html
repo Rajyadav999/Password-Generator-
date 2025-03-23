@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Password Generator App</title>
+ <style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 50px;
+  }
+  h1 {
+    color: #333;
+  }
+  form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-align: left;
+  }
+  input[type="number"], input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  input[type="submit"] {
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  input[type="submit"]:hover {
+    background: #218838;
+  }
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  h2 {
+    color: #007bff;
+    margin-top: 20px;
+  }
+ </style>
+</head>
+<body>
+  <center>
+    <h1>Password Generator App</h1>
+    <form onsubmit="show(event)">
+      <input type="number" id="len" placeholder="Enter password length"/>
+      <br/><br/>
+      <input type="checkbox" id="uc"/> Upper case
+      <input type="checkbox" id="di"/> Digit
+      <input type="checkbox" id="sp"/> Special Characters
+      <br/><br/>
+      <input type="submit" value="Generate Password"/>
+    </form>
+    <h2 id="msg"></h2>
+
+    <script>
+      function show(event) {
+        event.preventDefault();
+
+        const len = document.getElementById("len");
+        const uc = document.getElementById("uc");
+        const di = document.getElementById("di");
+        const sp = document.getElementById("sp");
+        const msg = document.getElementById("msg");
+
+        if (len.value.trim() === "") {
+          alert("Please enter password length");
+          len.value = "";
+          msg.innerHTML = "";
+          len.focus();
+          return;
+        }
+
+        const le = parseInt(len.value);
+        if (le < 6 || le > 12) {
+          alert("Password length must be between 6 to 12 characters");
+          len.value = "";
+          msg.innerHTML = "";
+          len.focus();
+          return;
+        }
+
+        let text = "abcdefghijklmnopqrstuvwxyz";
+        if (uc.checked) text += text.toUpperCase();
+        if (di.checked) text += "0123456789";
+        if (sp.checked) text += "!@#$%^&*()<>";
+
+        if (text.length === 0) {
+          alert("Please select at least one character type.");
+          return;
+        }
+
+        let pw = "";
+        for (let i = 0; i < le; i++) {
+          const r = Math.floor(Math.random() * text.length);
+          pw += text[r];
+        }
+
+        msg.innerHTML = `Password: <b>${pw}</b>`;
+
+        navigator.clipboard.writeText(pw)
+          .then(() => alert("Password copied to clipboard!"))
+          .catch(() => alert("Failed to copy password."));
+      }
+    </script>
+</center>
+</body>
+</html>
